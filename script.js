@@ -3,7 +3,7 @@ async function findUser(){
 const username = document.getElementById("username").value;
 const result = document.getElementById("result");
 
-result.innerHTML = "Loading profile...";
+result.innerHTML = "Loading...";
 
 try {
 
@@ -11,39 +11,49 @@ const res = await fetch(
 "https://roblox-api.devisserrik.workers.dev/?username=" + username
 );
 
-const data = await res.json();
+const user = await res.json();
 
 
-if(!data.data || data.data.length === 0){
-    result.innerHTML = "❌ User not found";
+if(user.error){
+    result.innerHTML="❌ User not found";
     return;
 }
 
 
-const user = data.data[0];
-
-
 result.innerHTML = `
+
+<img class="avatar" src="${user.avatar}">
 
 <h2>${user.displayName}</h2>
 
-<p>👤 Username: ${user.name}</p>
+<p>@${user.name}</p>
 
-<p>🆔 User ID: ${user.id}</p>
+<hr>
+
+<p>🆔 ID: ${user.id}</p>
 
 <p>✔️ Verified:
 ${user.hasVerifiedBadge ? "Yes" : "No"}
 </p>
 
+<p>🚫 Banned:
+${user.isBanned ? "Yes" : "No"}
+</p>
+
+<p>📅 Created:
+${new Date(user.created).toLocaleDateString()}
+</p>
+
 <br>
 
-<a target="_blank" href="https://www.roblox.com/users/${user.id}/profile">
+<a class="profile" target="_blank"
+href="https://www.roblox.com/users/${user.id}/profile">
 Open Roblox Profile
 </a>
 
 <br><br>
 
-<button onclick="copyID('${user.id}')">
+<button id="copyBtn" onclick="copyID('${user.id}')">
 Copy User ID
 </button>
 
@@ -52,7 +62,7 @@ Copy User ID
 } catch(error){
 
 console.log(error);
-result.innerHTML = "❌ Error loading user";
+result.innerHTML="❌ Error loading user";
 
 }
 
@@ -63,6 +73,12 @@ function copyID(id){
 
 navigator.clipboard.writeText(id);
 
-alert("Copied User ID: " + id);
+const btn = document.getElementById("copyBtn");
+
+btn.innerText="Copied!";
+
+setTimeout(()=>{
+    btn.innerText="Copy User ID";
+},2000);
 
 }
