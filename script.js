@@ -15,36 +15,23 @@ async function findUser(){
 
         console.log(data);
 
-        if(data.error){
+        if(!data.data || data.data.length === 0){
             result.innerHTML = "❌ User not found";
             return;
         }
 
-        const user = data.profile;
-
+        const user = data.data[0];
 
         result.innerHTML = `
 
-        <img class="avatar" src="${data.avatar}">
-
         <h2>${user.displayName}</h2>
 
-        <p>@${user.name}</p>
-
-        <hr>
+        <p>👤 Username: @${user.name}</p>
 
         <p>🆔 User ID: ${user.id}</p>
 
         <p>✔️ Verified:
         ${user.hasVerifiedBadge ? "Yes" : "No"}
-        </p>
-
-        <p>🚫 Banned:
-        ${user.isBanned ? "Yes" : "No"}
-        </p>
-
-        <p>📅 Created:
-        ${new Date(user.created).toLocaleDateString()}
         </p>
 
         <br>
@@ -62,14 +49,12 @@ async function findUser(){
 
         `;
 
-
     } catch(error){
 
         console.log(error);
-        result.innerHTML="❌ Error loading user";
+        result.innerHTML = "❌ Error loading user";
 
     }
-
 }
 
 
@@ -77,12 +62,12 @@ function copyID(id){
 
     navigator.clipboard.writeText(id);
 
-    const btn=document.getElementById("copyBtn");
+    const btn = document.getElementById("copyBtn");
 
-    btn.innerText="Copied!";
+    btn.innerText = "Copied!";
 
-    setTimeout(()=>{
-        btn.innerText="Copy User ID";
-    },2000);
+    setTimeout(() => {
+        btn.innerText = "Copy User ID";
+    }, 2000);
 
 }
