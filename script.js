@@ -7,35 +7,33 @@ async function findUser() {
 
     try {
 
-        // JOUW CLOUDFLARE WORKER
         const userReq = await fetch(
             "https://roblox-api.devisserrik.workers.dev/?username=" + username
         );
 
         const userData = await userReq.json();
 
-
         if (!userData.data || userData.data.length === 0) {
             result.innerHTML = "❌ User bestaat niet";
             return;
         }
 
-
         const user = userData.data[0];
 
 
-        const avatarReq = await fetch(
-            `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=150x150&format=Png`
-        );
-
-        const avatarData = await avatarReq.json();
-
-
+        // Profiel info via Worker toevoegen
         const infoReq = await fetch(
-            `https://users.roblox.com/v1/users/${user.id}`
+            "https://users.roblox.com/v1/users/" + user.id
         );
 
         const info = await infoReq.json();
+
+
+        const avatarUrl =
+        `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=150x150&format=Png`;
+
+        const avatarReq = await fetch(avatarUrl);
+        const avatarData = await avatarReq.json();
 
 
         result.innerHTML = `
@@ -50,12 +48,12 @@ async function findUser() {
 
         <p>🆔 User ID: ${info.id}</p>
 
-        <p>📅 Created:
-        ${new Date(info.created).toLocaleDateString()}
-        </p>
+        <p>✔️ Verified: ${info.hasVerifiedBadge ? "Ja" : "Nee"}</p>
 
-        <p>🚫 Banned:
-        ${info.isBanned ? "Ja" : "Nee"}
+        <p>🚫 Banned: ${info.isBanned ? "Ja" : "Nee"}</p>
+
+        <p>📅 Gemaakt:
+        ${new Date(info.created).toLocaleDateString()}
         </p>
 
         <button onclick="copyID('${info.id}')">
@@ -63,20 +61,16 @@ async function findUser() {
         </button>
 
         </div>
-
         `;
 
 
     } catch(error) {
 
         console.log(error);
-
         result.innerHTML = "❌ Error loading user";
 
     }
-
 }
-
 
 
 function copyID(id) {
