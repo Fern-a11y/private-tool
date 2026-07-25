@@ -3,27 +3,53 @@ async function findUser() {
     const username = document.getElementById("username").value;
     const result = document.getElementById("result");
 
-    result.innerHTML = "Testen...";
+    result.innerHTML = "Loading...";
 
     try {
 
-        const response = await fetch(
+        const userReq = await fetch(
             "https://roblox-api.devisserrik.workers.dev/?username=" + username
         );
 
-        const text = await response.text();
+        const userData = await userReq.json();
+
+        if (!userData.data || userData.data.length === 0) {
+            result.innerHTML = "❌ User bestaat niet";
+            return;
+        }
+
+        const user = userData.data[0];
 
         result.innerHTML = `
-            <h3>Response:</h3>
-            <pre>${text}</pre>
+            <h2>${user.displayName}</h2>
+
+            <div class="info">
+                <p>👤 Username: ${user.name}</p>
+                <p>🆔 User ID: ${user.id}</p>
+                <p>✔️ Verified: ${user.hasVerifiedBadge ? "Ja" : "Nee"}</p>
+
+                <button onclick="copyID('${user.id}')">
+                    Copy User ID
+                </button>
+            </div>
         `;
 
-    } catch (error) {
+    } catch(error) {
 
-        result.innerHTML = `
-            ❌ Fetch fout:<br>
-            ${error}
-        `;
+        console.log(error);
+        result.innerHTML = "❌ Error loading user";
+
+    }
+}
+
+
+function copyID(id) {
+
+    navigator.clipboard.writeText(id);
+
+    alert("User ID gekopieerd: " + id);
+
+}
 
         console.log(error);
     }
