@@ -20,49 +20,19 @@ async function findUser() {
 
         const user = userData.data[0];
 
-
-        // Profiel info via Worker toevoegen
-        const infoReq = await fetch(
-            "https://users.roblox.com/v1/users/" + user.id
-        );
-
-        const info = await infoReq.json();
-
-
-        const avatarUrl =
-        `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=150x150&format=Png`;
-
-        const avatarReq = await fetch(avatarUrl);
-        const avatarData = await avatarReq.json();
-
-
         result.innerHTML = `
+            <h2>${user.displayName}</h2>
 
-        <img class="avatar" src="${avatarData.data[0].imageUrl}">
+            <div class="info">
+                <p>👤 Username: ${user.name}</p>
+                <p>🆔 User ID: ${user.id}</p>
+                <p>✔️ Verified: ${user.hasVerifiedBadge ? "Ja" : "Nee"}</p>
 
-        <h2>${info.displayName}</h2>
-
-        <div class="info">
-
-        <p>👤 Username: ${info.name}</p>
-
-        <p>🆔 User ID: ${info.id}</p>
-
-        <p>✔️ Verified: ${info.hasVerifiedBadge ? "Ja" : "Nee"}</p>
-
-        <p>🚫 Banned: ${info.isBanned ? "Ja" : "Nee"}</p>
-
-        <p>📅 Gemaakt:
-        ${new Date(info.created).toLocaleDateString()}
-        </p>
-
-        <button onclick="copyID('${info.id}')">
-        Copy User ID
-        </button>
-
-        </div>
+                <button onclick="copyID('${user.id}')">
+                    Copy User ID
+                </button>
+            </div>
         `;
-
 
     } catch(error) {
 
