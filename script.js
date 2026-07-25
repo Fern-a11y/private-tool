@@ -1,22 +1,88 @@
 async function findUser() {
+
+    const username = document.getElementById("username").value;
     const result = document.getElementById("result");
 
+    result.innerHTML = "Loading...";
+
     try {
-        const response = await fetch("https://users.roblox.com/v1/users/1");
 
-        const data = await response.json();
+        // JOUW CLOUDFLARE WORKER
+        const userReq = await fetch(
+            "https://roblox-api.devisserrik.workers.dev/?username=" + username
+        );
+
+        const userData = await userReq.json();
+
+
+        if (!userData.data || userData.data.length === 0) {
+            result.innerHTML = "❌ User bestaat niet";
+            return;
+        }
+
+
+        const user = userData.data[0];
+
+
+        const avatarReq = await fetch(
+            `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=150x150&format=Png`
+        );
+
+        const avatarData = await avatarReq.json();
+
+
+        const infoReq = await fetch(
+            `https://users.roblox.com/v1/users/${user.id}`
+        );
+
+        const info = await infoReq.json();
+
 
         result.innerHTML = `
-        ✅ API werkt<br><br>
-        Naam: ${data.name}<br>
-        ID: ${data.id}
+
+        <img class="avatar" src="${avatarData.data[0].imageUrl}">
+
+        <h2>${info.displayName}</h2>
+
+        <div class="info">
+
+        <p>👤 Username: ${info.name}</p>
+
+        <p>🆔 User ID: ${info.id}</p>
+
+        <p>📅 Created:
+        ${new Date(info.created).toLocaleDateString()}
+        </p>
+
+        <p>🚫 Banned:
+        ${info.isBanned ? "Ja" : "Nee"}
+        </p>
+
+        <button onclick="copyID('${info.id}')">
+        Copy User ID
+        </button>
+
+        </div>
+
         `;
 
-    } catch (error) {
-        result.innerHTML = `
-        ❌ API fout<br>
-        ${error}
-        `;
+
+    } catch(error) {
+
         console.log(error);
+
+        result.innerHTML = "❌ Error loading user";
+
     }
+
+}
+
+
+
+function copyID(id) {
+
+    navigator.clipboard.writeText(id);
+
+    alert("User ID gekopieerd: " + id);
+
 }
