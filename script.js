@@ -1,22 +1,153 @@
-function login(){
+async function findUser(){
 
-    const code =
-    document.getElementById("code").value;
+    const username =
+    document.getElementById("username").value.trim();
+
+    const result =
+    document.getElementById("result");
 
 
-    if(code === "123456"){
+    if(!username){
 
-        document.getElementById("login").style.display="none";
+        result.innerHTML =
+        "Please enter a username";
 
-        document.getElementById("panel").style.display="block";
+        return;
+
+    }
+
+
+    result.innerHTML =
+    "Loading profile...";
+
+
+    try {
+
+
+        const response = await fetch(
+            "https://roblox-api.devisserrik.workers.dev/?username="
+            + encodeURIComponent(username)
+        );
+
+
+        const data = await response.json();
+
+
+        console.log(data);
+
+
+        if(data.error || !data.profile){
+
+            result.innerHTML =
+            "❌ User not found";
+
+            return;
+
+        }
+
+
+        const user = data.profile;
+
+
+        result.innerHTML = `
+
+        <div class="card">
+
+            <img class="avatar"
+            src="${data.avatar}">
+
+
+            <h2>
+            ${user.displayName}
+            </h2>
+
+
+            <p>
+            👤 Username: @${user.name}
+            </p>
+
+
+            <p>
+            🆔 User ID: ${user.id}
+            </p>
+
+
+            <p>
+            ✔️ Verified:
+            ${user.hasVerifiedBadge ? "Yes" : "No"}
+            </p>
+
+
+            <p>
+            🚫 Banned:
+            ${user.isBanned ? "Yes" : "No"}
+            </p>
+
+
+            <p>
+            📅 Created:
+            ${new Date(user.created).toLocaleDateString()}
+            </p>
+
+
+            <br>
+
+
+            <a target="_blank"
+            href="https://www.roblox.com/users/${user.id}/profile">
+            Open Roblox Profile
+            </a>
+
+
+            <br><br>
+
+
+            <button id="copyBtn"
+            onclick="copyID(${user.id})">
+            Copy User ID
+            </button>
+
+
+        </div>
+
+        `;
+
 
     }
 
-    else {
+    catch(error){
 
-        document.getElementById("error").innerHTML =
-        "Wrong code";
+        console.error(error);
+
+        result.innerHTML =
+        "❌ Error loading profile";
 
     }
+
+}
+
+
+
+function copyID(id){
+
+    navigator.clipboard.writeText(
+        String(id)
+    );
+
+
+    const button =
+    document.getElementById("copyBtn");
+
+
+    button.innerText =
+    "Copied!";
+
+
+    setTimeout(()=>{
+
+        button.innerText =
+        "Copy User ID";
+
+    },2000);
 
 }
