@@ -1,73 +1,67 @@
-async function findUser(){
+async function findUser() {
 
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("username").value.trim();
     const result = document.getElementById("result");
+
+    if (!username) {
+        result.innerHTML = "Please enter a username.";
+        return;
+    }
 
     result.innerHTML = "Loading profile...";
 
     try {
 
         const res = await fetch(
-            "https://roblox-api.devisserrik.workers.dev/?username=" + username
+            "https://roblox-api.devisserrik.workers.dev/?username=" + encodeURIComponent(username)
         );
 
         const data = await res.json();
 
-        console.log(data);
+        if (data.error || !data.profile) {
+            result.innerHTML = "❌ User not found";
+            return;
+        }
 
-        if (!data.profile) {
-    result.innerHTML = "❌ User not found";
-    return;
-}
-
-const user = data.profile;
+        const user = data.profile;
 
         result.innerHTML = `
+            <img class="avatar" src="${data.avatar}" alt="Avatar">
 
-        <h2>${user.displayName}</h2>
+            <h2>${user.displayName}</h2>
 
-        <p>👤 Username: @${user.name}</p>
+            <p><b>Username:</b> @${user.name}</p>
+            <p><b>User ID:</b> ${user.id}</p>
+            <p><b>Verified:</b> ${user.hasVerifiedBadge ? "✅ Yes" : "❌ No"}</p>
+            <p><b>Banned:</b> ${user.isBanned ? "Yes" : "No"}</p>
+            <p><b>Created:</b> ${new Date(user.created).toLocaleDateString()}</p>
 
-        <p>🆔 User ID: ${user.id}</p>
+            <p>
+                <a href="https://www.roblox.com/users/${user.id}/profile" target="_blank">
+                    Open Roblox Profile
+                </a>
+            </p>
 
-        <p>✔️ Verified:
-        ${user.hasVerifiedBadge ? "Yes" : "No"}
-        </p>
-
-        <br>
-
-        <a target="_blank"
-        href="https://www.roblox.com/users/${user.id}/profile">
-        Open Roblox Profile
-        </a>
-
-        <br><br>
-
-        <button id="copyBtn" onclick="copyID(${user.id})">
-        Copy User ID
-        </button>
-
+            <button id="copyBtn" onclick="copyID(${user.id})">
+                Copy User ID
+            </button>
         `;
 
-    } catch(error){
-
-        console.log(error);
-        result.innerHTML = "❌ Error loading user";
-
+    } catch (error) {
+        console.error(error);
+        result.innerHTML = "❌ Error loading profile";
     }
 }
 
+function copyID(id) {
 
-function copyID(id){
-
-    navigator.clipboard.writeText(id);
+    navigator.clipboard.writeText(String(id));
 
     const btn = document.getElementById("copyBtn");
 
-    btn.innerText = "Copied!";
+    btn.textContent = "Copied!";
 
     setTimeout(() => {
-        btn.innerText = "Copy User ID";
+        btn.textContent = "Copy User ID";
     }, 2000);
-
 }
