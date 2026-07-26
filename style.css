@@ -16,6 +16,13 @@ body {
 }
 
 
+#login {
+
+    margin-top:100px;
+
+}
+
+
 h1 {
 
     color:#00aaff;
@@ -30,13 +37,15 @@ input {
     border-radius:10px;
     border:none;
     font-size:16px;
+    text-align:center;
 
 }
 
 
 button {
 
-    padding:12px 20px;
+    margin-top:15px;
+    padding:12px 25px;
     border:none;
     border-radius:10px;
     background:#0099ff;
@@ -75,5 +84,13 @@ button:hover {
 a {
 
     color:#00aaff;
+
+}
+
+
+#error,
+#loginError {
+
+    color:red;
 
 }
