@@ -15,12 +15,12 @@ async function findUser(){
 
         console.log(data);
 
-        if(!data.data || data.data.length === 0){
-            result.innerHTML = "❌ User not found";
-            return;
-        }
+        if (!data.profile) {
+    result.innerHTML = "❌ User not found";
+    return;
+}
 
-        const user = data.data[0];
+const user = data.profile;
 
         result.innerHTML = `
 
