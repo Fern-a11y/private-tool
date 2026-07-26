@@ -1,22 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Roblox Finder</title>
-<link rel="stylesheet" href="style.css">
+    <title>Roblox Moderation</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="card">
-<h1>🎮 Roblox Finder</h1>
+<div id="login">
 
-<input id="username" placeholder="Roblox username">
+    <h1>Roblox Moderation</h1>
 
-<button onclick="findUser()">Search</button>
+    <p>Enter access code</p>
 
-<div id="result"></div>
+    <input 
+        id="code"
+        type="password"
+        placeholder="Code"
+    >
+
+    <button onclick="login()">
+        Login
+    </button>
+
+    <p id="error"></p>
 
 </div>
+
+
+<div id="panel" style="display:none">
+
+    <h1>Moderation Panel</h1>
+
+
+    <div class="card">
+        👤 Player Lookup
+        <br>
+        <button>
+            Open
+        </button>
+    </div>
+
+
+    <div class="card">
+        🔨 Ban User
+        <br>
+        <button>
+            Open
+        </button>
+    </div>
+
+
+    <div class="card">
+        📜 Ban History
+        <br>
+        <button>
+            Open
+        </button>
+    </div>
+
+
+</div>
+
 
 <script src="script.js"></script>
 
