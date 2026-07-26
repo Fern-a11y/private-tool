@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Roblox Profile Finder</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
@@ -17,14 +21,15 @@
     <input 
         id="password"
         type="password"
-        placeholder="6 digit code"
+        placeholder="Access code"
     >
 
     <br>
 
     <button onclick="login()">
-        Enter
+        Login
     </button>
+
 
     <p id="loginError"></p>
 
@@ -32,39 +37,53 @@
 
 
 
+
+
 <div id="app" style="display:none">
 
 
-    <div class="container">
-
-        <h1>Roblox Profile Finder</h1>
+<div class="container">
 
 
-        <div class="search">
-
-            <input 
-                id="username"
-                placeholder="Enter Roblox username"
-            >
-
-            <button onclick="findUser()">
-                Search
-            </button>
-
-        </div>
+    <h1>Roblox Profile Finder</h1>
 
 
-        <div id="result"></div>
+
+    <div class="search">
+
+
+        <input
+            id="username"
+            placeholder="Enter Roblox username"
+        >
+
+
+        <button onclick="findUser()">
+            Search
+        </button>
 
 
     </div>
+
+
+
+
+
+    <div id="result"></div>
+
+
+
+</div>
 
 
 </div>
 
 
 
+
+
 <script src="script.js"></script>
+
 
 </body>
 </html>
