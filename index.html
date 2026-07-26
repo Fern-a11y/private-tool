@@ -15,15 +15,16 @@
     <p>Enter access code</p>
 
     <input 
-    id="password"
-    type="password"
-    placeholder="Code">
+        id="password"
+        type="password"
+        placeholder="6 digit code"
+    >
 
+    <br>
 
     <button onclick="login()">
         Enter
     </button>
-
 
     <p id="loginError"></p>
 
@@ -34,32 +35,33 @@
 <div id="app" style="display:none">
 
 
-<div class="container">
+    <div class="container">
 
-    <h1>Roblox Profile Finder</h1>
-
-
-    <div class="search">
-
-        <input 
-        id="username"
-        placeholder="Enter Roblox username">
+        <h1>Roblox Profile Finder</h1>
 
 
-        <button onclick="findUser()">
-            Search
-        </button>
+        <div class="search">
+
+            <input 
+                id="username"
+                placeholder="Enter Roblox username"
+            >
+
+            <button onclick="findUser()">
+                Search
+            </button>
+
+        </div>
+
+
+        <div id="result"></div>
+
 
     </div>
 
 
-    <div id="result"></div>
-
-
 </div>
 
-
-</div>
 
 
 <script src="script.js"></script>
