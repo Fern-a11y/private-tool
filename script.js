@@ -1,27 +1,59 @@
-function login(){
+async function login() {
 
     const password =
-    document.getElementById("password").value;
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("loginError");
 
 
-    if(password === "123456"){
+    try {
 
-        document.getElementById("login").style.display="none";
+        const response = await fetch(
+            "https://roblox-api.devisserrik.workers.dev/login",
+            {
+                method: "POST",
 
-        document.getElementById("app").style.display="block";
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-
-        localStorage.setItem(
-            "profileFinderLogin",
-            "true"
+                body: JSON.stringify({
+                    password: password
+                })
+            }
         );
 
-    }
 
-    else {
+        const data = await response.json();
 
-        document.getElementById("loginError").innerHTML =
-        "❌ Wrong code";
+
+        if (data.success) {
+
+            document.getElementById("login").style.display = "none";
+
+            document.getElementById("app").style.display = "block";
+
+
+            localStorage.setItem(
+                "profileFinderLogin",
+                "true"
+            );
+
+        } 
+        
+        else {
+
+            error.innerHTML = "❌ Wrong access code";
+
+        }
+
+
+    } catch (err) {
+
+        console.error(err);
+
+        error.innerHTML = "❌ Login error";
 
     }
 
@@ -29,16 +61,17 @@ function login(){
 
 
 
-window.onload = function(){
 
-    if(
-        localStorage.getItem("profileFinderLogin")
-        === "true"
-    ){
+window.onload = function () {
 
-        document.getElementById("login").style.display="none";
 
-        document.getElementById("app").style.display="block";
+    if (
+        localStorage.getItem("profileFinderLogin") === "true"
+    ) {
+
+        document.getElementById("login").style.display = "none";
+
+        document.getElementById("app").style.display = "block";
 
     }
 
@@ -48,28 +81,34 @@ window.onload = function(){
 
 
 
-async function findUser(){
+
+
+async function findUser() {
+
 
     const username =
-    document.getElementById("username").value.trim();
+        document.getElementById("username").value.trim();
 
 
     const result =
-    document.getElementById("result");
+        document.getElementById("result");
 
 
-    if(!username){
+
+    if (!username) {
 
         result.innerHTML =
-        "Please enter a username";
+            "Please enter a username";
 
         return;
 
     }
 
 
+
     result.innerHTML =
-    "Loading profile...";
+        "Loading profile...";
+
 
 
     try {
@@ -77,21 +116,30 @@ async function findUser(){
 
         const response = await fetch(
 
-        "https://roblox-api.devisserrik.workers.dev/?username="
-        + encodeURIComponent(username)
+            "https://roblox-api.devisserrik.workers.dev/?username="
+            + encodeURIComponent(username)
 
         );
 
 
+
         const data =
-        await response.json();
+            await response.json();
 
 
 
-        if(data.error || !data.profile){
+
+        console.log(data);
+
+
+
+
+        if (data.error || !data.profile) {
+
 
             result.innerHTML =
-            "❌ User not found";
+                "❌ User not found";
+
 
             return;
 
@@ -99,8 +147,10 @@ async function findUser(){
 
 
 
+
         const user =
-        data.profile;
+            data.profile;
+
 
 
 
@@ -110,8 +160,10 @@ async function findUser(){
         <div class="card">
 
 
-            <img class="avatar"
-            src="${data.avatar}">
+            <img 
+            class="avatar"
+            src="${data.avatar}"
+            alt="Avatar">
 
 
             <h2>
@@ -119,14 +171,17 @@ async function findUser(){
             </h2>
 
 
+
             <p>
             👤 Username: @${user.name}
             </p>
 
 
+
             <p>
             🆔 User ID: ${user.id}
             </p>
+
 
 
             <p>
@@ -135,10 +190,12 @@ async function findUser(){
             </p>
 
 
+
             <p>
             🚫 Banned:
             ${user.isBanned ? "Yes" : "No"}
             </p>
+
 
 
             <p>
@@ -151,9 +208,13 @@ async function findUser(){
             <br>
 
 
-            <a target="_blank"
+
+            <a 
+            target="_blank"
             href="https://www.roblox.com/users/${user.id}/profile">
+
             Open Roblox Profile
+
             </a>
 
 
@@ -162,7 +223,9 @@ async function findUser(){
 
 
 
-            <button id="copyBtn"
+
+            <button 
+            id="copyBtn"
             onclick="copyID(${user.id})">
 
             Copy User ID
@@ -178,15 +241,15 @@ async function findUser(){
 
 
 
-    }
+    } catch (error) {
 
 
-    catch(error){
+        console.error(error);
 
-        console.log(error);
 
         result.innerHTML =
-        "❌ Error loading profile";
+            "❌ Error loading profile";
+
 
     }
 
@@ -197,7 +260,9 @@ async function findUser(){
 
 
 
-function copyID(id){
+
+
+function copyID(id) {
 
 
     navigator.clipboard.writeText(
@@ -205,26 +270,24 @@ function copyID(id){
     );
 
 
-
     const button =
-    document.getElementById("copyBtn");
+        document.getElementById("copyBtn");
 
 
 
     button.innerText =
-    "Copied!";
+        "Copied!";
 
 
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
 
         button.innerText =
-        "Copy User ID";
+            "Copy User ID";
 
 
-    },2000);
-
+    }, 2000);
 
 
 }
