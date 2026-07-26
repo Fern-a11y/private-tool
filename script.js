@@ -1,7 +1,58 @@
+function login(){
+
+    const password =
+    document.getElementById("password").value;
+
+
+    if(password === "123456"){
+
+        document.getElementById("login").style.display="none";
+
+        document.getElementById("app").style.display="block";
+
+
+        localStorage.setItem(
+            "profileFinderLogin",
+            "true"
+        );
+
+    }
+
+    else {
+
+        document.getElementById("loginError").innerHTML =
+        "❌ Wrong code";
+
+    }
+
+}
+
+
+
+window.onload = function(){
+
+    if(
+        localStorage.getItem("profileFinderLogin")
+        === "true"
+    ){
+
+        document.getElementById("login").style.display="none";
+
+        document.getElementById("app").style.display="block";
+
+    }
+
+};
+
+
+
+
+
 async function findUser(){
 
     const username =
     document.getElementById("username").value.trim();
+
 
     const result =
     document.getElementById("result");
@@ -25,15 +76,16 @@ async function findUser(){
 
 
         const response = await fetch(
-            "https://roblox-api.devisserrik.workers.dev/?username="
-            + encodeURIComponent(username)
+
+        "https://roblox-api.devisserrik.workers.dev/?username="
+        + encodeURIComponent(username)
+
         );
 
 
-        const data = await response.json();
+        const data =
+        await response.json();
 
-
-        console.log(data);
 
 
         if(data.error || !data.profile){
@@ -46,12 +98,17 @@ async function findUser(){
         }
 
 
-        const user = data.profile;
+
+        const user =
+        data.profile;
+
 
 
         result.innerHTML = `
 
+
         <div class="card">
+
 
             <img class="avatar"
             src="${data.avatar}">
@@ -90,6 +147,7 @@ async function findUser(){
             </p>
 
 
+
             <br>
 
 
@@ -99,55 +157,74 @@ async function findUser(){
             </a>
 
 
+
             <br><br>
+
 
 
             <button id="copyBtn"
             onclick="copyID(${user.id})">
+
             Copy User ID
+
             </button>
+
 
 
         </div>
 
+
         `;
+
 
 
     }
 
+
     catch(error){
 
-        console.error(error);
+        console.log(error);
 
         result.innerHTML =
         "❌ Error loading profile";
 
     }
 
+
 }
 
 
 
+
+
 function copyID(id){
+
 
     navigator.clipboard.writeText(
         String(id)
     );
 
 
+
     const button =
     document.getElementById("copyBtn");
+
 
 
     button.innerText =
     "Copied!";
 
 
+
     setTimeout(()=>{
+
 
         button.innerText =
         "Copy User ID";
 
+
     },2000);
+
+
 
 }
